@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-    s.name             = "Validation"
+    s.name             = "ModalViewController"
     s.version          = "1.0.0"
     s.summary          = "Modal"
     s.description      = <<-DESC
