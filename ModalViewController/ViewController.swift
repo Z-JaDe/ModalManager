@@ -26,7 +26,7 @@ class ViewController: UIViewController, ModalContainerProtocol {
 }
 
 class _ModalViewController: FadeModalViewController {
-    override var modalViewLayout: ModalFadeAnimationOptions {
+    override var fadeAnimationOptions: ModalFadeAnimationOptions {
         return .center
     }
     override func viewDidLoad() {

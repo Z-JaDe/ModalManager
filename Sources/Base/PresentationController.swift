@@ -42,7 +42,9 @@ open class PresentationController: UIPresentationController {
         /// ZJaDe:
         let dimmingView = createDimmingView()
         self.dimmingView = dimmingView
-        dimmingView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dimmingViewTapped(_:))))
+        if let modalVC = self.presentedViewController as? ModalViewController {
+            dimmingView.addGestureRecognizer(UITapGestureRecognizer(target: modalVC, action: #selector(ModalViewController.dimmingViewTapped(_:))))
+        }
         self.containerView?.addSubview(dimmingView)
         /// ZJaDe:
         showDimmingViewAnimate(dimmingView)
@@ -77,14 +79,7 @@ open class PresentationController: UIPresentationController {
         dimmingView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         return dimmingView
     }
-    /// ZJaDe: 点击 dimmingView
-    @objc open func dimmingViewTapped(_ sender:UITapGestureRecognizer) {
-        if let container = self.presentingViewController as? ModalContainerProtocol, let modelVC = self.presentedViewController as? ModalViewController {
-            container.hide(modelVC, nil)
-        } else {
-            self.presentingViewController.dismiss(animated: true, completion: nil)
-        }
-    }
+    
     /// ZJaDe: dimmingView动画
     open func showDimmingViewAnimate(_ dimmingView:DimmingView) {
         dimmingView.alpha = 0

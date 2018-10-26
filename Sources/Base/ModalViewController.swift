@@ -54,6 +54,15 @@ open class ModalViewController: UIViewController, UIViewControllerTransitioningD
     open func configLayout() {
 
     }
+
+    /// ZJaDe: 点击 dimmingView
+    @objc open func dimmingViewTapped(_ sender:UITapGestureRecognizer) {
+        if let container = self.presentingViewController as? ModalContainerProtocol {
+            container.hide(self, nil)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updatePreferredContentSize(traitCollection: newCollection)
