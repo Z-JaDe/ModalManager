@@ -8,10 +8,6 @@
 
 import UIKit
 
-public enum ModalViewLayout {
-    case `default`, center, top, left, bottom, right
-}
-
 open class ModalViewController: UIViewController, UIViewControllerTransitioningDelegate {
 
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -24,15 +20,13 @@ open class ModalViewController: UIViewController, UIViewControllerTransitioningD
     /// ZJaDe:
     open lazy var presentationCon:PresentationController = createPresentationCon(presenting: nil)
 
-    open lazy var animatedTransitioning = ModalAnimatedTransitioning(self.modalViewLayout, self.presentationCon.presentingViewController)
+    open lazy var animatedTransitioning:ModalAnimatedTransitioning = createModalAnimatedTransitioning()
 
     open func createPresentationCon(presenting presentingViewController: UIViewController? = nil) -> PresentationController {
-        let viewCon = PresentationController(presentedViewController: self, presenting: presentingViewController)
-        viewCon.modalViewLayout = self.modalViewLayout
-        return viewCon
+        fatalError()
     }
-    open var modalViewLayout:ModalViewLayout {
-        return .default
+    open func createModalAnimatedTransitioning() -> ModalAnimatedTransitioning {
+        fatalError()
     }
 
     open func configInit() {
@@ -53,7 +47,7 @@ open class ModalViewController: UIViewController, UIViewControllerTransitioningD
         updatePreferredContentSize(traitCollection: newCollection)
     }
     open func updatePreferredContentSize(traitCollection: UITraitCollection) {
-        
+        self.preferredContentSize = (self.presentedViewController ?? self).view.frame.size
     }
 
     // MARK: - UIViewControllerTransitioningDelegate

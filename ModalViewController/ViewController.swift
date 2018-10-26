@@ -25,8 +25,8 @@ class ViewController: UIViewController, ModalContainerProtocol {
 
 }
 
-class _ModalViewController: ModalViewController {
-    override var modalViewLayout: ModalViewLayout {
+class _ModalViewController: FadeModalViewController {
+    override var modalViewLayout: ModalFadeAnimationOptions {
         return .center
     }
     override func viewDidLoad() {
@@ -34,7 +34,6 @@ class _ModalViewController: ModalViewController {
         self.view.backgroundColor = UIColor.red
     }
     override func updatePreferredContentSize(traitCollection: UITraitCollection) {
-        super.updatePreferredContentSize(traitCollection: traitCollection)
         self.preferredContentSize = CGSize(width: 50, height: 50)
     }
 }

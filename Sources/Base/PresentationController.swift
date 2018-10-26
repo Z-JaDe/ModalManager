@@ -20,7 +20,7 @@ open class PresentationController: UIPresentationController {
     open func configInit() {
 
     }
-    public var modalViewLayout: ModalViewLayout = .default
+
     private var presentationWrappingView: PresentationWrappingView?
     private var dimmingView: DimmingView?
 
@@ -54,9 +54,8 @@ open class PresentationController: UIPresentationController {
         }
     }
     open override func dismissalTransitionWillBegin() {
-        animate {
-            self.dimmingView?.alpha = 0
-        }
+        guard let dimmingView = dimmingView else { return }
+        hideDimmingViewAnimate(dimmingView)
     }
     open override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed == true {
@@ -68,22 +67,6 @@ open class PresentationController: UIPresentationController {
     /// ZJaDe: 创建presentedView的 阴影层视图
     open func createPresentationWrappingView() -> PresentationWrappingView {
         let view = PresentationWrappingView()
-        switch self.modalViewLayout {
-        case .default:
-            return view
-        case .top:
-            view.layer.shadowOffset = CGSize(width: 0, height: 6)
-        case .bottom:
-            view.layer.shadowOffset = CGSize(width: 0, height: -6)
-        case .left:
-            view.layer.shadowOffset = CGSize(width: 6, height: 0)
-        case .right:
-            view.layer.shadowOffset = CGSize(width: -6, height: 0)
-        case .center:
-            view.layer.shadowOffset = CGSize(width: 0, height: 0)
-        }
-        view.layer.shadowOpacity = 0.44
-        view.layer.shadowRadius = 13
         return view
     }
     /// ZJaDe: 创建背景层视图
@@ -107,6 +90,11 @@ open class PresentationController: UIPresentationController {
         dimmingView.alpha = 0
         animate {
             dimmingView.alpha = 0.5
+        }
+    }
+    open func hideDimmingViewAnimate(_ dimmingView:DimmingView) {
+        animate {
+            dimmingView.alpha = 0
         }
     }
     /// ZJaDe: add presentedView
@@ -168,25 +156,6 @@ open class PresentationController: UIPresentationController {
     }
     /// ZJaDe: 计算 presentedView的Frame
     open func presentedViewFrame(_ containerViewBounds:CGRect, _ presentedViewContentSize: CGSize) -> CGRect? {
-        var result = containerViewBounds
-        result.size = presentedViewContentSize
-        switch self.modalViewLayout {
-        case .default: return nil
-        case .top:
-            result.origin.y = 0
-        case .bottom:
-            result.origin.y = containerViewBounds.maxY - result.height
-        case .left:
-            result.origin.x = 0
-        case .right:
-            result.origin.x = containerViewBounds.maxX - result.width
-        case .center:
-            let x = (containerViewBounds.width - result.width) / 2
-            let y = (containerViewBounds.height - result.height) / 2
-            result.origin = CGPoint(x: x, y: y)
-        }
-        return result
+        return nil
     }
 }
-
-

@@ -9,10 +9,8 @@
 import UIKit
 
 open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
-    public let modalViewLayout: ModalViewLayout
     public let presentingViewController: UIViewController
-    public init(_ modalViewLayout: ModalViewLayout, _ presentingViewController:UIViewController) {
-        self.modalViewLayout = modalViewLayout
+    public init(_ presentingViewController:UIViewController) {
         self.presentingViewController = presentingViewController
         super.init()
     }
@@ -50,51 +48,31 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
     func show(toView: UIView, finalFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
         let initialFrame = calculateToViewInitialFrame(finalFrame: finalFrame)
         toView.frame = initialFrame
-        performAnimation(in: toView, finalFrame: finalFrame, duration: duration, completion: completion)
+        performAnimation(withDuration: duration, {
+            toView.frame = finalFrame
+        }, completion: completion)
     }
     func hide(fromView: UIView, initialFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
         let finalFrame = calculateFromViewFinalFrame(initialFrame: initialFrame)
-        performAnimation(in: fromView, finalFrame: finalFrame, duration: duration, completion: completion)
+        performAnimation(withDuration: duration, {
+            fromView.frame = finalFrame
+        }, completion: completion)
     }
     // MARK: -
     open func animateDuration(_ animated: Bool) -> TimeInterval {
         return animated ?  0.35 : 0
     }
     /// ZJaDe: 执行过渡动画
-    open func performAnimation(in view: UIView, finalFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
-        UIView.animate(withDuration: duration, animations: {
-            view.frame = finalFrame
-        }, completion: completion)
+    open func performAnimation(withDuration duration:TimeInterval, _ animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+        UIView.animate(withDuration: duration, animations: animations, completion: completion)
     }
     
     /// ZJaDe: 呈现toView时 的最初frame
     open func calculateToViewInitialFrame(finalFrame:CGRect) -> CGRect {
-        switch self.modalViewLayout {
-        case .default, .bottom:
-            return finalFrame.offsetBy(dx: 0, dy: finalFrame.height)
-        case .top:
-            return finalFrame.offsetBy(dx: 0, dy: -finalFrame.height)
-        case .left:
-            return finalFrame.offsetBy(dx: -finalFrame.width, dy: 0)
-        case .right:
-            return finalFrame.offsetBy(dx: finalFrame.width, dy: 0)
-        case .center:
-            return CGRect(origin: CGPoint(x: finalFrame.midX, y: finalFrame.midY), size: CGSize.zero)
-        }
+        return finalFrame.offsetBy(dx: 0, dy: finalFrame.height)
     }
     /// ZJaDe: 隐藏fromView时 的最终frame
     open func calculateFromViewFinalFrame(initialFrame:CGRect) -> CGRect {
-        switch self.modalViewLayout {
-        case .default, .bottom:
-            return initialFrame.offsetBy(dx: 0, dy: initialFrame.height)
-        case .top:
-            return initialFrame.offsetBy(dx: 0, dy: -initialFrame.height)
-        case .left:
-            return initialFrame.offsetBy(dx: -initialFrame.width, dy: 0)
-        case .right:
-            return initialFrame.offsetBy(dx: initialFrame.width, dy: 0)
-        case .center:
-            return CGRect(origin: CGPoint(x: initialFrame.midX, y: initialFrame.midY), size: CGSize.zero)
-        }
+        return initialFrame.offsetBy(dx: 0, dy: initialFrame.height)
     }
 }
