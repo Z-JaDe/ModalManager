@@ -41,6 +41,18 @@ open class ModalViewController: UIViewController, UIViewControllerTransitioningD
     open override func viewDidLoad() {
         super.viewDidLoad()
         updatePreferredContentSize(traitCollection: self.traitCollection)
+        addChildView()
+        configLayout()
+        view.setNeedsLayout()
+    }
+
+    /// ZJaDe: 不要直接调用该方法，重写添加子view
+    open func addChildView() {
+
+    }
+    /// ZJaDe: 不要直接调用该方法，重写设置约束
+    open func configLayout() {
+
     }
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
