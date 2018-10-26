@@ -1,6 +1,6 @@
 //
 //  PresentationController.swift
-//  PresentationController
+//  ModalViewController
 //
 //  Created by 郑军铎 on 2018/10/26.
 //  Copyright © 2018 zjade. All rights reserved.
@@ -27,6 +27,7 @@ open class PresentationController: UIPresentationController {
     open override var presentedView: UIView? {
         return self.presentationWrappingView
     }
+    // MARK: - 
     public final override func presentationTransitionWillBegin() {
         guard let presentedView = super.presentedView else {
             return
@@ -46,11 +47,15 @@ open class PresentationController: UIPresentationController {
         /// ZJaDe:
         showDimmingViewAnimate(dimmingView)
     }
-    // MARK: -
     open override func presentationTransitionDidEnd(_ completed: Bool) {
         if completed == false {
             self.presentationWrappingView = nil
             self.dimmingView = nil
+        }
+    }
+    open override func dismissalTransitionWillBegin() {
+        animate {
+            self.dimmingView?.alpha = 0
         }
     }
     open override func dismissalTransitionDidEnd(_ completed: Bool) {
@@ -59,65 +64,7 @@ open class PresentationController: UIPresentationController {
             self.dimmingView = nil
         }
     }
-    open override func dismissalTransitionWillBegin() {
-        let transitionCoordinator = self.presentingViewController.transitionCoordinator
-        transitionCoordinator?.animate(alongsideTransition: { (context) in
-            self.dimmingView?.alpha = 0
-        }, completion: nil)
-    }
-    // MARK: - Layout
-    open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        super.preferredContentSizeDidChange(forChildContentContainer: container)
-        if container === self.presentedViewController {
-            self.containerView?.setNeedsLayout()
-        }
-    }
-    open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
-        if container === self.presentedViewController {
-            return self.presentedViewController.preferredContentSize
-        }else {
-            return super.size(forChildContentContainer: container, withParentContainerSize: parentSize)
-        }
-    }
-    public final override var frameOfPresentedViewInContainerView: CGRect {
-        guard let containerViewBounds = self.containerView?.bounds else {
-            return super.frameOfPresentedViewInContainerView
-        }
-        let presentedViewContentSize = self.size(forChildContentContainer: self.presentedViewController, withParentContainerSize: containerViewBounds.size)
-        guard let result = presentedViewFrame(containerViewBounds, presentedViewContentSize) else {
-            return super.frameOfPresentedViewInContainerView
-        }
-        return result
-    }
-    open override func containerViewWillLayoutSubviews() {
-        super.containerViewWillLayoutSubviews()
-        if let containerView = self.containerView {
-            self.dimmingView?.frame = containerView.bounds
-        }
-        self.presentationWrappingView?.frame = self.frameOfPresentedViewInContainerView
-    }
-    /// ZJaDe: 计算 presentedView的Frame
-    open func presentedViewFrame(_ containerViewBounds:CGRect, _ presentedViewContentSize: CGSize) -> CGRect? {
-        var result = containerViewBounds
-        result.size = presentedViewContentSize
-        switch self.modalViewLayout {
-        case .default: return nil
-        case .top:
-            result.origin.y = 0
-        case .bottom:
-            result.origin.y = containerViewBounds.maxY - result.height
-        case .left:
-            result.origin.x = 0
-        case .right:
-            result.origin.x = containerViewBounds.maxX - result.width
-        case .center:
-            let x = (containerViewBounds.width - result.width) / 2
-            let y = (containerViewBounds.height - result.height) / 2
-            result.origin = CGPoint(x: x, y: y)
-        }
-        return result
-    }
-    // MARK: -
+    // MARK: - 自定义方法 可重写
     /// ZJaDe: 创建presentedView的 阴影层视图
     open func createPresentationWrappingView() -> PresentationWrappingView {
         let view = PresentationWrappingView()
@@ -149,21 +96,97 @@ open class PresentationController: UIPresentationController {
     }
     /// ZJaDe: 点击 dimmingView
     @objc open func dimmingViewTapped(_ sender:UITapGestureRecognizer) {
-        self.presentingViewController.dismiss(animated: true, completion: nil)
+        if let container = self.presentingViewController as? ModalContainerProtocol, let modelVC = self.presentedViewController as? ModalViewController {
+            container.hide(modelVC, nil)
+        } else {
+            self.presentingViewController.dismiss(animated: true, completion: nil)
+        }
     }
     /// ZJaDe: dimmingView动画
     open func showDimmingViewAnimate(_ dimmingView:DimmingView) {
-        let transitionCoordinator = self.presentingViewController.transitionCoordinator
         dimmingView.alpha = 0
-        transitionCoordinator?.animate(alongsideTransition: { (context) in
+        animate {
             dimmingView.alpha = 0.5
-        }, completion: nil)
+        }
     }
     /// ZJaDe: add presentedView
     open func add(presentedView: UIView, in wrappingView: PresentationWrappingView) {
         wrappingView.addSubview(presentedView)
     }
-    
+    /// ZJaDe: animate
+    open func animate(_ closure: @escaping () -> Void) {
+        if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
+            transitionCoordinator.animate(alongsideTransition: { (context) in
+                closure()
+            }, completion: nil)
+        }else {
+            UIView.animate(withDuration: 0.35) {
+                closure()
+            }
+        }
+    }
+
+    // MARK: - Layout
+    open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        super.preferredContentSizeDidChange(forChildContentContainer: container)
+        if container === self.presentedViewController {
+            self.containerView?.setNeedsLayout()
+        }
+    }
+    open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
+        if container === self.presentedViewController {
+            return self.presentedViewController.preferredContentSize
+        }else {
+            return super.size(forChildContentContainer: container, withParentContainerSize: parentSize)
+        }
+    }
+    public final override var frameOfPresentedViewInContainerView: CGRect {
+        let presentedViewContentSize = self.size(forChildContentContainer: self.presentedViewController, withParentContainerSize: containerViewBounds.size)
+        guard let result = presentedViewFrame(containerViewBounds, presentedViewContentSize) else {
+            return super.frameOfPresentedViewInContainerView
+        }
+        return result
+    }
+    open override func containerViewWillLayoutSubviews() {
+        super.containerViewWillLayoutSubviews()
+        updateViewsFrame()
+    }
+    /// ZJaDe:
+    open func updateViewsFrame() {
+        self.dimmingView?.frame = containerViewBounds
+        self.presentationWrappingView?.frame = self.frameOfPresentedViewInContainerView
+    }
+    open override var containerView: UIView? {
+        if let result = super.containerView {
+            return result
+        }else {
+            return self.presentingViewController.view
+        }
+    }
+    open var containerViewBounds: CGRect {
+        return self.containerView!.bounds
+    }
+    /// ZJaDe: 计算 presentedView的Frame
+    open func presentedViewFrame(_ containerViewBounds:CGRect, _ presentedViewContentSize: CGSize) -> CGRect? {
+        var result = containerViewBounds
+        result.size = presentedViewContentSize
+        switch self.modalViewLayout {
+        case .default: return nil
+        case .top:
+            result.origin.y = 0
+        case .bottom:
+            result.origin.y = containerViewBounds.maxY - result.height
+        case .left:
+            result.origin.x = 0
+        case .right:
+            result.origin.x = containerViewBounds.maxX - result.width
+        case .center:
+            let x = (containerViewBounds.width - result.width) / 2
+            let y = (containerViewBounds.height - result.height) / 2
+            result.origin = CGPoint(x: x, y: y)
+        }
+        return result
+    }
 }
 
 

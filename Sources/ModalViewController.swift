@@ -22,14 +22,25 @@ open class ModalViewController: UIViewController, UIViewControllerTransitioningD
         fatalError("init(coder:) has not been implemented")
     }
     /// ZJaDe:
-    open lazy var presentationCon:PresentationController = PresentationController(presentedViewController: self, presenting: nil)
+    open lazy var presentationCon:PresentationController = createPresentationCon(presenting: nil)
 
+    open lazy var animatedTransitioning = ModalAnimatedTransitioning(self.modalViewLayout, self.presentationCon.presentingViewController)
+
+    open func createPresentationCon(presenting presentingViewController: UIViewController? = nil) -> PresentationController {
+        let viewCon = PresentationController(presentedViewController: self, presenting: presentingViewController)
+        viewCon.modalViewLayout = self.modalViewLayout
+        return viewCon
+    }
     open var modalViewLayout:ModalViewLayout {
         return .default
     }
 
     open func configInit() {
-        self.presentationCon.modalViewLayout = self.modalViewLayout
+        /** ZJaDe:
+            configInitd方法中需要随便初始化 一个 PresentationController 对象 要不然后面 presentationCon.presentingViewController 将取不到值，导致判断出错
+            就是这么变态，原因未知 手动调用load() initialize()也不行
+         */
+        _ = self.presentationCon
         self.transitioningDelegate = self
     }
 
@@ -51,10 +62,11 @@ open class ModalViewController: UIViewController, UIViewControllerTransitioningD
         return self.presentationCon
     }
     open func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return ModalAnimatedTransitioning(self.modalViewLayout, self.presentationCon.presentingViewController)
+        return self.animatedTransitioning
     }
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return ModalAnimatedTransitioning(self.modalViewLayout, self.presentationCon.presentingViewController)
+        return self.animatedTransitioning
     }
 
 }
+

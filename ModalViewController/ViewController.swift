@@ -8,11 +8,18 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, ModalContainerProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.present(_ModalViewController(), animated: true, completion: nil)
+
+        self.view.backgroundColor = UIColor.yellow
+        let modal = _ModalViewController()
+//        self.present(modal, animated: true, completion: nil)
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+//            self.navigationController?.pushViewController(ViewController(), animated: true)
+//        }
+        self.show(modal)
     }
 
 
@@ -24,6 +31,7 @@ class _ModalViewController: ModalViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(self.presentingViewController)
         self.view.backgroundColor = UIColor.red
     }
     override func updatePreferredContentSize(traitCollection: UITraitCollection) {

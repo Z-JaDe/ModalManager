@@ -17,10 +17,10 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         super.init()
     }
     /// ZJaDe:
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return (transitionContext?.isAnimated ?? false) ? 0.35 : 0
+    public final func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return animateDuration(transitionContext?.isAnimated ?? false)
     }
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    public final func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let fromVC:UIViewController = transitionContext.viewController(forKey: .from)!
         let toVC:UIViewController = transitionContext.viewController(forKey: .to)!
         let fromView:UIView? = transitionContext.view(forKey: .from)
@@ -44,25 +44,31 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         } else {
             fromViewFinalFrame = calculateFromViewFinalFrame(containerView, initialFrame: fromView?.frame ?? fromViewInitialFrame)
         }
-
-        if isPresenting {
-            guard let toView = toView else { return }
-            performAnimation(in: toView, finalFrame: toViewFinalFrame, using: transitionContext)
-        }else {
-            guard let fromView = fromView else { return }
-            performAnimation(in: fromView, finalFrame: fromViewFinalFrame, using: transitionContext)
-        }
-    }
-    /// ZJaDe: 执行过渡动画
-    open func performAnimation(in view: UIView, finalFrame: CGRect, using transitionContext: UIViewControllerContextTransitioning) {
         let transitionDuration = self.transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: transitionDuration, animations: {
-            view.frame = finalFrame
-        }) { (_) in
+
+        let completion: (Bool) -> Void = { (_) in
             let wasCancelled = transitionContext.transitionWasCancelled
             transitionContext.completeTransition(!wasCancelled)
         }
+        if isPresenting {
+            guard let toView = toView else { return }
+            performAnimation(in: toView, finalFrame: toViewFinalFrame, duration: transitionDuration, completion: completion)
+        }else {
+            guard let fromView = fromView else { return }
+            performAnimation(in: fromView, finalFrame: fromViewFinalFrame, duration: transitionDuration, completion: completion)
+        }
     }
+    // MARK: -
+    open func animateDuration(_ animated: Bool) -> TimeInterval {
+        return animated ?  0.35 : 0
+    }
+    /// ZJaDe: 执行过渡动画
+    open func performAnimation(in view: UIView, finalFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
+        UIView.animate(withDuration: duration, animations: {
+            view.frame = finalFrame
+        }, completion: completion)
+    }
+    
     /// ZJaDe: 呈现toView时 的最初frame
     open func calculateToViewInitialFrame(_ containerView:UIView, finalFrame:CGRect) -> CGRect {
         switch self.modalViewLayout {

@@ -16,6 +16,7 @@
 		C915BBEE2182AB6B00AB3B35 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBED2182AB6B00AB3B35 /* PresentationController.swift */; };
 		C915BBF62182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */; };
 		C915BBFA2182F6DD00AB3B35 /* ModalManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */; };
+		C972593E2183002A003A6342 /* ModalContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972593D2183002A003A6342 /* ModalContainerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		C915BBED2182AB6B00AB3B35 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalAnimatedTransitioning.swift; sourceTree = "<group>"; };
 		C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ModalManager.podspec; sourceTree = "<group>"; };
+		C972593D2183002A003A6342 /* ModalContainerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalContainerProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				C915BBEB2182AB2200AB3B35 /* ModalViewController.swift */,
+				C972593D2183002A003A6342 /* ModalContainerProtocol.swift */,
 				C915BBF42182CEA200AB3B35 /* AnimatedTransitioning */,
 				C915BBEF2182AB7600AB3B35 /* PresentationController */,
 			);
@@ -177,6 +180,7 @@
 				C915BBF62182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift in Sources */,
 				C915BBEC2182AB2200AB3B35 /* ModalViewController.swift in Sources */,
 				C915BBD92182AA8300AB3B35 /* AppDelegate.swift in Sources */,
+				C972593E2183002A003A6342 /* ModalContainerProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
