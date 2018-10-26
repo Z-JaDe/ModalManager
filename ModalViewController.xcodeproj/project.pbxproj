@@ -15,6 +15,7 @@
 		C915BBEC2182AB2200AB3B35 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBEB2182AB2200AB3B35 /* ModalViewController.swift */; };
 		C915BBEE2182AB6B00AB3B35 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBED2182AB6B00AB3B35 /* PresentationController.swift */; };
 		C915BBF62182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */; };
+		C915BBFA2182F6DD00AB3B35 /* ModalManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		C915BBEB2182AB2200AB3B35 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 		C915BBED2182AB6B00AB3B35 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalAnimatedTransitioning.swift; sourceTree = "<group>"; };
+		C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ModalManager.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +46,7 @@
 		C915BBCC2182AA8300AB3B35 = {
 			isa = PBXGroup;
 			children = (
+				C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */,
 				C915BBEA2182AACE00AB3B35 /* Sources */,
 				C915BBD72182AA8300AB3B35 /* ModalViewController */,
 				C915BBD62182AA8300AB3B35 /* Products */,
@@ -158,6 +161,7 @@
 				C915BBE32182AA8400AB3B35 /* LaunchScreen.storyboard in Resources */,
 				C915BBE02182AA8400AB3B35 /* Assets.xcassets in Resources */,
 				C915BBDE2182AA8300AB3B35 /* Main.storyboard in Resources */,
+				C915BBFA2182F6DD00AB3B35 /* ModalManager.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
