@@ -24,12 +24,11 @@ extension ModalContainerProtocol where Self: UIViewController {
         presentationCon.presentationTransitionWillBegin()
         let toView: UIView = presentationCon.presentedView!
         let finalFrame = presentationCon.frameOfPresentedViewInContainerView
-        self.view.addSubview(toView)
+        containerView.addSubview(toView)
         self.addChild(viewCon)
         viewCon.didMove(toParent: self)
         presentationCon.updateViewsFrame()
-        toView.frame = animatedTransitioning.calculateToViewInitialFrame(containerView, finalFrame: finalFrame)
-        animatedTransitioning.performAnimation(in: toView, finalFrame: finalFrame, duration: animateDuration, completion: nil)
+        animatedTransitioning.show(toView: toView, finalFrame: finalFrame, duration: animateDuration, completion: nil)
         presentationCon.presentationTransitionDidEnd(true)
     }
     fileprivate func _hide(_ viewCon: ModalViewController, _ completion: (() -> Void)?) {
@@ -41,12 +40,8 @@ extension ModalContainerProtocol where Self: UIViewController {
 
         presentationCon.dismissalTransitionWillBegin()
         let fromView: UIView = presentationCon.presentedView!
-        let finalFrame = animatedTransitioning.calculateFromViewFinalFrame(fromView, initialFrame: fromView.frame)
-        self.view.addSubview(presentationCon.presentedView!)
-        self.addChild(viewCon)
-        viewCon.didMove(toParent: self)
 
-        animatedTransitioning.performAnimation(in: fromView, finalFrame: finalFrame, duration: animateDuration, completion: { (_) in
+        animatedTransitioning.hide(fromView: fromView, initialFrame: fromView.frame, duration: animateDuration, completion: { (_) in
             fromView.removeFromSuperview()
             viewCon.willMove(toParent: nil)
             viewCon.removeFromParent()

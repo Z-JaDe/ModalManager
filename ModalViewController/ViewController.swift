@@ -31,7 +31,6 @@ class _ModalViewController: ModalViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(self.presentingViewController)
         self.view.backgroundColor = UIColor.red
     }
     override func updatePreferredContentSize(traitCollection: UITraitCollection) {

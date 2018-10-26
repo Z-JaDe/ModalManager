@@ -28,35 +28,33 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         /// ZJaDe: 是否正在呈现
         let isPresenting = fromVC == self.presentingViewController
         let containerView = transitionContext.containerView
-        let fromViewInitialFrame = transitionContext.initialFrame(for: fromVC)
-        var fromViewFinalFrame = transitionContext.finalFrame(for: fromVC)
-        var toViewInitialFrame = transitionContext.initialFrame(for: toVC)
         let toViewFinalFrame = transitionContext.finalFrame(for: toVC)
 
         /// ZJaDe:
         if let toView = toView {
             containerView.addSubview(toView)
         }
-
-        if isPresenting {
-            toViewInitialFrame = calculateToViewInitialFrame(containerView, finalFrame: toViewFinalFrame)
-            toView?.frame = toViewInitialFrame
-        } else {
-            fromViewFinalFrame = calculateFromViewFinalFrame(containerView, initialFrame: fromView?.frame ?? fromViewInitialFrame)
-        }
         let transitionDuration = self.transitionDuration(using: transitionContext)
-
         let completion: (Bool) -> Void = { (_) in
             let wasCancelled = transitionContext.transitionWasCancelled
             transitionContext.completeTransition(!wasCancelled)
         }
         if isPresenting {
             guard let toView = toView else { return }
-            performAnimation(in: toView, finalFrame: toViewFinalFrame, duration: transitionDuration, completion: completion)
+            show(toView: toView, finalFrame: toViewFinalFrame, duration: transitionDuration, completion: completion)
         }else {
             guard let fromView = fromView else { return }
-            performAnimation(in: fromView, finalFrame: fromViewFinalFrame, duration: transitionDuration, completion: completion)
+            hide(fromView: fromView, initialFrame: fromView.frame, duration: transitionDuration, completion: completion)
         }
+    }
+    func show(toView: UIView, finalFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
+        let initialFrame = calculateToViewInitialFrame(finalFrame: finalFrame)
+        toView.frame = initialFrame
+        performAnimation(in: toView, finalFrame: finalFrame, duration: duration, completion: completion)
+    }
+    func hide(fromView: UIView, initialFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
+        let finalFrame = calculateFromViewFinalFrame(initialFrame: initialFrame)
+        performAnimation(in: fromView, finalFrame: finalFrame, duration: duration, completion: completion)
     }
     // MARK: -
     open func animateDuration(_ animated: Bool) -> TimeInterval {
@@ -70,7 +68,7 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
     }
     
     /// ZJaDe: 呈现toView时 的最初frame
-    open func calculateToViewInitialFrame(_ containerView:UIView, finalFrame:CGRect) -> CGRect {
+    open func calculateToViewInitialFrame(finalFrame:CGRect) -> CGRect {
         switch self.modalViewLayout {
         case .default, .bottom:
             return finalFrame.offsetBy(dx: 0, dy: finalFrame.height)
@@ -85,7 +83,7 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         }
     }
     /// ZJaDe: 隐藏fromView时 的最终frame
-    open func calculateFromViewFinalFrame(_ containerView:UIView, initialFrame:CGRect) -> CGRect {
+    open func calculateFromViewFinalFrame(initialFrame:CGRect) -> CGRect {
         switch self.modalViewLayout {
         case .default, .bottom:
             return initialFrame.offsetBy(dx: 0, dy: initialFrame.height)
