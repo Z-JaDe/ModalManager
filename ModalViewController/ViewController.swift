@@ -12,9 +12,22 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        self.present(_ModalViewController(), animated: true, completion: nil)
     }
 
 
 }
 
+class _ModalViewController: ModalViewController {
+    override var modalViewLayout: ModalViewLayout {
+        return .center
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = UIColor.red
+    }
+    override func updatePreferredContentSize(traitCollection: UITraitCollection) {
+        super.updatePreferredContentSize(traitCollection: traitCollection)
+        self.preferredContentSize = CGSize(width: 50, height: 50)
+    }
+}
