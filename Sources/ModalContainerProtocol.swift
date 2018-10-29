@@ -17,9 +17,9 @@ extension ModalContainerProtocol where Self: UIViewController {
     /// ZJaDe: 具体实现 不能直接调用
     public func _show(_ viewCon: ModalViewController) {
         guard viewCon.parent == nil else { return }
-        viewCon.presentationCon = viewCon.createPresentationCon(presenting: self)
-        let presentationCon = viewCon.presentationCon
-        let animatedTransitioning = viewCon.animatedTransitioning
+        let presentationCon = viewCon.createPresentationCon(modalContainer: self)
+        viewCon.tempPresentationController = presentationCon
+        let animatedTransitioning = viewCon.createAnimatedTransitioning(isPresenting: true)
         let containerView: UIView = self.view
         let animateDuration = animatedTransitioning.animateDuration(true)
 
@@ -35,9 +35,15 @@ extension ModalContainerProtocol where Self: UIViewController {
     }
     /// ZJaDe: 具体实现 不能直接调用
     public func _hide(_ viewCon: ModalViewController, _ completion: AnimateCompletionType?) {
+        func remove(_ view:UIView, _ viewCon: ModalViewController) {
+            view.removeFromSuperview()
+            viewCon.willMove(toParent: nil)
+            viewCon.removeFromParent()
+            completion?()
+        }
         guard viewCon.parent is ModalContainerProtocol else { return }
-        let presentationCon = viewCon.presentationCon
-        let animatedTransitioning = viewCon.animatedTransitioning
+        guard let presentationCon = viewCon.tempPresentationController else { return }
+        let animatedTransitioning = viewCon.createAnimatedTransitioning(isPresenting: false)
 
         let animateDuration = animatedTransitioning.animateDuration(true)
 
@@ -45,10 +51,7 @@ extension ModalContainerProtocol where Self: UIViewController {
         let fromView: UIView = presentationCon.presentedView!
 
         animatedTransitioning.hide(fromView: fromView, initialFrame: fromView.frame, duration: animateDuration, completion: { (_) in
-            fromView.removeFromSuperview()
-            viewCon.willMove(toParent: nil)
-            viewCon.removeFromParent()
-            completion?()
+            remove(fromView, viewCon)
         })
         presentationCon.dismissalTransitionDidEnd(true)
     }
@@ -64,8 +67,5 @@ extension ModalContainerProtocol where Self: UIViewController {
 extension ModalViewController {
     public func show(in container: ModalContainerProtocol) {
         container.show(self)
-    }
-    public func hide(_ callback: ModalContainerProtocol.AnimateCompletionType? = nil) {
-        (self.parent as? ModalContainerProtocol)?.hide(self, callback)
     }
 }

@@ -9,9 +9,12 @@
 import UIKit
 
 open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
-    public let presentingViewController: UIViewController
-    public init(_ presentingViewController:UIViewController) {
-        self.presentingViewController = presentingViewController
+
+    public let isPresenting: Bool
+    public weak var modalDelegate: ModalAnimatedTransitioningDeledate?
+    public init(_ isPresenting: Bool, _ modalDelegate: ModalAnimatedTransitioningDeledate?) {
+        self.isPresenting = isPresenting
+        self.modalDelegate = modalDelegate
         super.init()
     }
     /// ZJaDe:
@@ -23,8 +26,7 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         let toVC:UIViewController = transitionContext.viewController(forKey: .to)!
         let fromView:UIView? = transitionContext.view(forKey: .from)
         let toView:UIView? = transitionContext.view(forKey: .to)
-        /// ZJaDe: 是否正在呈现
-        let isPresenting = fromVC == self.presentingViewController
+
         let containerView = transitionContext.containerView
         let toViewFinalFrame = transitionContext.finalFrame(for: toVC)
 
@@ -47,8 +49,10 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
     }
     func show(toView: UIView, finalFrame: CGRect, duration:TimeInterval, completion: ((Bool) -> Void)?) {
         let initialFrame = calculateToViewInitialFrame(finalFrame: finalFrame)
+        toView.alpha = 0
         toView.frame = initialFrame
         performAnimation(withDuration: duration, {
+            toView.alpha = 1
             toView.frame = finalFrame
         }, completion: completion)
     }
@@ -56,6 +60,7 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         let finalFrame = calculateFromViewFinalFrame(initialFrame: initialFrame)
         performAnimation(withDuration: duration, {
             fromView.frame = finalFrame
+            fromView.alpha = 0
         }, completion: completion)
     }
     // MARK: -
@@ -69,10 +74,16 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
     
     /// ZJaDe: 呈现toView时 的最初frame
     open func calculateToViewInitialFrame(finalFrame:CGRect) -> CGRect {
+        if let rect = self.modalDelegate?.calculateToViewInitialFrame(finalFrame: finalFrame) {
+            return rect
+        }
         return finalFrame.offsetBy(dx: 0, dy: finalFrame.height)
     }
     /// ZJaDe: 隐藏fromView时 的最终frame
     open func calculateFromViewFinalFrame(initialFrame:CGRect) -> CGRect {
+        if let rect = self.modalDelegate?.calculateFromViewFinalFrame(initialFrame: initialFrame) {
+            return rect
+        }
         return initialFrame.offsetBy(dx: 0, dy: initialFrame.height)
     }
 }

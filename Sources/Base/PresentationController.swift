@@ -12,15 +12,28 @@ open class PresentationController: UIPresentationController {
     // MARK: -
     public class PresentationWrappingView: UIView { }
     public class DimmingView: UIView { }
-    public override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
-        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
-        presentedViewController.modalPresentationStyle = .custom
+    public let modalVC: ModalViewController
+    var modalDelegate: ModalPresentationDelegate? {
+        return self.modalVC.presentationDelegate
+    }
+    private var modalContainer:UIViewController?
+    public required init(_ modalVC: ModalViewController, modalContainer: UIViewController) {
+        self.modalVC = modalVC
+        super.init(presentedViewController: modalVC, presenting: nil)
+        modalVC.modalPresentationStyle = .custom
+        self.modalContainer = modalContainer
         configInit()
     }
+    public required init(_ modalVC: ModalViewController, presenting: UIViewController?) {
+        self.modalVC = modalVC
+        super.init(presentedViewController: modalVC, presenting: presenting)
+        modalVC.modalPresentationStyle = .custom
+        configInit()
+    }
+
     open func configInit() {
 
     }
-
     private var presentationWrappingView: PresentationWrappingView?
     private var dimmingView: DimmingView?
 
@@ -29,12 +42,12 @@ open class PresentationController: UIPresentationController {
     }
     // MARK: - 
     public final override func presentationTransitionWillBegin() {
-        guard let presentedView = super.presentedView else {
-            return
-        }
+        self.modalDelegate?.presentationTransitionWillBegin()
+        guard let presentedView = super.presentedView else { return }
         /// ZJaDe:
         let wrappingView = createPresentationWrappingView()
         self.presentationWrappingView = wrappingView
+        self.modalDelegate?.config(presentationWrappingView: wrappingView)
         wrappingView.frame = self.frameOfPresentedViewInContainerView
         /// ZJaDe:
         presentedView.frame = wrappingView.bounds
@@ -42,9 +55,8 @@ open class PresentationController: UIPresentationController {
         /// ZJaDe:
         let dimmingView = createDimmingView()
         self.dimmingView = dimmingView
-        if let modalVC = self.presentedViewController as? ModalViewController {
-            dimmingView.addGestureRecognizer(UITapGestureRecognizer(target: modalVC, action: #selector(ModalViewController.dimmingViewTapped(_:))))
-        }
+        self.modalDelegate?.config(dimmingView: dimmingView)
+        dimmingView.addGestureRecognizer(UITapGestureRecognizer(target: modalVC, action: #selector(ModalViewController.dimmingViewTapped)))
         self.containerView?.addSubview(dimmingView)
         /// ZJaDe:
         showDimmingViewAnimate(dimmingView)
@@ -52,18 +64,23 @@ open class PresentationController: UIPresentationController {
     open override func presentationTransitionDidEnd(_ completed: Bool) {
         if completed == false {
             self.presentationWrappingView = nil
+            self.dimmingView?.removeFromSuperview()
             self.dimmingView = nil
         }
+        self.modalDelegate?.presentationTransitionDidEnd(completed)
     }
     open override func dismissalTransitionWillBegin() {
+        self.modalDelegate?.dismissalTransitionWillBegin()
         guard let dimmingView = dimmingView else { return }
         hideDimmingViewAnimate(dimmingView)
     }
     open override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed == true {
             self.presentationWrappingView = nil
+            self.dimmingView?.removeFromSuperview()
             self.dimmingView = nil
         }
+        self.modalDelegate?.dismissalTransitionDidEnd(completed)
     }
     // MARK: - 自定义方法 可重写
     /// ZJaDe: 创建presentedView的 阴影层视图
@@ -112,20 +129,21 @@ open class PresentationController: UIPresentationController {
     // MARK: - Layout
     open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
-        if container === self.presentedViewController {
+        if container === self.modalVC {
             self.containerView?.setNeedsLayout()
         }
     }
     open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
-        if container === self.presentedViewController {
-            return self.presentedViewController.preferredContentSize
+        if container === self.modalVC {
+            return self.modalVC.preferredContentSize
         }else {
             return super.size(forChildContentContainer: container, withParentContainerSize: parentSize)
         }
     }
+    
     public final override var frameOfPresentedViewInContainerView: CGRect {
-        let presentedViewContentSize = self.size(forChildContentContainer: self.presentedViewController, withParentContainerSize: containerViewBounds.size)
-        guard let result = presentedViewFrame(containerViewBounds, presentedViewContentSize) else {
+        let presentedViewContentSize = self.size(forChildContentContainer: self.modalVC, withParentContainerSize: containerViewBounds.size)
+        guard let result = self.modalDelegate?.presentedViewFrame(containerViewBounds, presentedViewContentSize) else {
             return super.frameOfPresentedViewInContainerView
         }
         return result
@@ -142,6 +160,8 @@ open class PresentationController: UIPresentationController {
     open override var containerView: UIView? {
         if let result = super.containerView {
             return result
+        } else if let modalContainer = self.modalContainer {
+            return modalContainer.view
         }else {
             return self.presentingViewController.view
         }
@@ -149,8 +169,5 @@ open class PresentationController: UIPresentationController {
     open var containerViewBounds: CGRect {
         return self.containerView!.bounds
     }
-    /// ZJaDe: 计算 presentedView的Frame
-    open func presentedViewFrame(_ containerViewBounds:CGRect, _ presentedViewContentSize: CGSize) -> CGRect? {
-        return nil
-    }
+    
 }

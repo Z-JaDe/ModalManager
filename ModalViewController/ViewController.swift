@@ -21,14 +21,10 @@ class ViewController: UIViewController, ModalContainerProtocol {
 //        }
         self.show(modal)
     }
-
-
 }
 
-class _ModalViewController: FadeModalViewController {
-    override var fadeAnimationOptions: ModalFadeAnimationOptions {
-        return .center
-    }
+class _ModalViewController: ModalViewController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.red
