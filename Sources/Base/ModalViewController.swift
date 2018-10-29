@@ -78,6 +78,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     /// ZJaDe: 不要直接调用该方法，重写设置约束
     open func configLayout() {
         if let centerContentView = self._centerContentView {
+            centerContentView.translatesAutoresizingMaskIntoConstraints = false
             var constraintArr:[NSLayoutConstraint] = []
             constraintArr.append(centerContentView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor))
             constraintArr.append(centerContentView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor))
