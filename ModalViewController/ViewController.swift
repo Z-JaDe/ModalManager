@@ -27,9 +27,14 @@ class _ModalViewController: ModalViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.red
+        self.centerContentView.backgroundColor = UIColor.red
     }
-    override func updatePreferredContentSize(traitCollection: UITraitCollection) {
-        self.preferredContentSize = CGSize(width: 50, height: 50)
+    override func configLayout() {
+        super.configLayout()
+        self.centerContentView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        self.centerContentView.heightAnchor.constraint(equalToConstant: 200).isActive = true
     }
+//    override func updatePreferredContentSize(traitCollection: UITraitCollection) {
+//        self.preferredContentSize = CGSize(width: 50, height: 50)
+//    }
 }

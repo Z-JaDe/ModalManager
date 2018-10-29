@@ -17,6 +17,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     // MARK: -
     /// ZJaDe: model时 因为不是present(:::) 所以presentingViewController为nil 所以需要手动记录下
     private weak var modalPresenting: UIViewController?
@@ -49,7 +50,10 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             centerContentView = UIView()
             _centerContentView = centerContentView
         }
-        self.view.addSubview(centerContentView)
+        if centerContentView.superview != self.view {
+            self.view.addSubview(centerContentView)
+            centerContentViewLayout()
+        }
         return centerContentView
     }
 
@@ -60,6 +64,8 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         view.setNeedsLayout()
         updatePreferredContentSize(traitCollection: self.traitCollection)
         reloadData()
+
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped(_:))))
     }
 
     public var isShowing: Bool {
@@ -78,18 +84,37 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     }
     /// ZJaDe: 不要直接调用该方法，重写设置约束
     open func configLayout() {
-        if let centerContentView = self._centerContentView {
-            centerContentView.translatesAutoresizingMaskIntoConstraints = false
-            var constraintArr:[NSLayoutConstraint] = []
-            constraintArr.append(centerContentView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor))
-            constraintArr.append(centerContentView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor))
-            constraintArr.append(centerContentView.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor))
-            constraintArr.append(centerContentView.leftAnchor.constraint(greaterThanOrEqualTo: self.view.leftAnchor))
-            NSLayoutConstraint.activate(constraintArr)
+
+    }
+    func centerContentViewLayout() {
+        guard let centerContentView = self._centerContentView else {
+            return
         }
+        centerContentView.translatesAutoresizingMaskIntoConstraints = false
+        var constraintArr:[NSLayoutConstraint] = []
+        constraintArr.append(centerContentView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor))
+        constraintArr.append(centerContentView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor))
+        constraintArr.append(centerContentView.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor))
+        constraintArr.append(centerContentView.leftAnchor.constraint(greaterThanOrEqualTo: self.view.leftAnchor))
+        NSLayoutConstraint.activate(constraintArr)
     }
 
     /// ZJaDe: 点击 dimmingView
+    @objc open func dimmingViewTapped() {
+        cancel()
+    }
+    @objc open func viewTapped(_ sender: UITapGestureRecognizer) {
+        let point = sender.location(in: self.view)
+        guard let view = self.view.hitTest(point, with: nil) else {
+            return
+        }
+        guard self.view == view else {
+            return
+        }
+        if (self.view.backgroundColor?.alpha ?? 0) <= 0.03 {
+            cancel()
+        }
+    }
     open func cancel(_ completion: (() -> Void)? = nil) {
         if let container = self.parent as? ModalContainerProtocol {
             container.hide(self, completion)
@@ -97,9 +122,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             self.dismiss(animated: true, completion: completion)
         }
     }
-    @objc open func dimmingViewTapped() {
-        cancel()
-    }
+    // MARK: -
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updatePreferredContentSize(traitCollection: newCollection)
@@ -215,5 +238,12 @@ extension PresentationController: UIViewControllerTransitioningDelegate {
     }
     public final func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return modalVC.createAnimatedTransitioning(isPresenting: false)
+    }
+}
+extension UIColor {
+    var alpha: CGFloat {
+        var a: CGFloat = 0
+        getRed(nil, green: nil, blue: nil, alpha: &a)
+        return a
     }
 }
