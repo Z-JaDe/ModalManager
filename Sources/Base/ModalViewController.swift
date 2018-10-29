@@ -40,11 +40,17 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
 
 
     /// ZJaDe: 调用时会 自动添加到self.view上面, 当内容尺寸不确定时可以使用这个，内容尺寸确定的话 直接使用self.view
-    open lazy var contentView: UIView = {
-        let view = UIView()
-        self.view.addSubview(view)
-        return view
-    }()
+    private var _centerContentView:UIView?
+    public var centerContentView: UIView {
+        let centerContentView:UIView
+        if let result = self._centerContentView {
+            centerContentView = result
+        }else {
+            centerContentView = UIView()
+        }
+        self.view.addSubview(centerContentView)
+        return centerContentView
+    }
 
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +77,14 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     }
     /// ZJaDe: 不要直接调用该方法，重写设置约束
     open func configLayout() {
-
+        if let centerContentView = self._centerContentView {
+            var constraintArr:[NSLayoutConstraint] = []
+            constraintArr.append(centerContentView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor))
+            constraintArr.append(centerContentView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor))
+            constraintArr.append(centerContentView.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor))
+            constraintArr.append(centerContentView.leftAnchor.constraint(greaterThanOrEqualTo: self.view.leftAnchor))
+            NSLayoutConstraint.activate(constraintArr)
+        }
     }
 
     /// ZJaDe: 点击 dimmingView
