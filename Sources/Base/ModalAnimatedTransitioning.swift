@@ -69,9 +69,10 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
     }
     /// ZJaDe: 执行过渡动画
     open func performAnimation(withDuration duration:TimeInterval, _ animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+//        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 10, options: [], animations: animations, completion: completion)
         UIView.animate(withDuration: duration, animations: animations, completion: completion)
     }
-    
+
     /// ZJaDe: 呈现toView时 的最初frame
     open func calculateToViewInitialFrame(finalFrame:CGRect) -> CGRect {
         if let rect = self.modalDelegate?.calculateToViewInitialFrame(finalFrame: finalFrame) {

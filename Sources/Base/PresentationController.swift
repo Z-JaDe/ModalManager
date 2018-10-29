@@ -40,7 +40,8 @@ open class PresentationController: UIPresentationController {
     open override var presentedView: UIView? {
         return self.presentationWrappingView
     }
-    // MARK: - 
+    // MARK: -
+    var key:NSKeyValueObservation?
     public final override func presentationTransitionWillBegin() {
         self.modalDelegate?.presentationTransitionWillBegin()
         guard let presentedView = super.presentedView else { return }
@@ -57,7 +58,7 @@ open class PresentationController: UIPresentationController {
         self.dimmingView = dimmingView
         self.modalDelegate?.config(dimmingView: dimmingView)
         dimmingView.addGestureRecognizer(UITapGestureRecognizer(target: modalVC, action: #selector(ModalViewController.dimmingViewTapped)))
-        self.containerView?.addSubview(dimmingView)
+        self._containerView.addSubview(dimmingView)
         /// ZJaDe:
         showDimmingViewAnimate(dimmingView)
     }
@@ -129,8 +130,15 @@ open class PresentationController: UIPresentationController {
     // MARK: - Layout
     open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
-        if container === self.modalVC {
-            self.containerView?.setNeedsLayout()
+        guard container === self.modalVC else {
+            return
+        }
+        if let containerView = self.containerView {
+            containerView.setNeedsLayout()
+        }else {
+            containerViewWillLayoutSubviews()
+            _containerView.setNeedsLayout()
+            containerViewDidLayoutSubviews()
         }
     }
     open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
@@ -157,17 +165,20 @@ open class PresentationController: UIPresentationController {
         self.dimmingView?.frame = containerViewBounds
         self.presentationWrappingView?.frame = self.frameOfPresentedViewInContainerView
     }
-    open override var containerView: UIView? {
-        if let result = super.containerView {
-            return result
+
+    var _containerView: UIView {
+        let view:UIView
+        if let result = self.containerView {
+            view = result
         } else if let modalContainer = self.modalContainer {
-            return modalContainer.view
+            view = modalContainer.view
         }else {
-            return self.presentingViewController.view
+            view = self.presentingViewController.view
         }
+        return view
     }
     open var containerViewBounds: CGRect {
-        return self.containerView!.bounds
+        return _containerView.bounds
     }
     
 }

@@ -196,17 +196,26 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         result.origin = CGPoint(x: x, y: y)
         return result
     }
+    public enum State {
+        case 还未显示
+        case 将要显示
+        case 已经显示
+        case 将要消失
+        case 已经消失
+    }
+    public private(set) var state: State = .还未显示
     open func presentationTransitionWillBegin() {
-
+        self.state = .将要显示
     }
     open func presentationTransitionDidEnd(_ completed: Bool) {
-
+        self.state = .已经显示
+    }
+    open func dismissalTransitionWillBegin() {
+        self.state = .将要消失
     }
     open func dismissalTransitionDidEnd(_ completed: Bool) {
         self.tempPresentationController = nil
-    }
-    open func dismissalTransitionWillBegin() {
-
+        self.state = .已经消失
     }
     // MARK: - ModalAnimatedTransitioningDeledate
     open func calculateToViewInitialFrame(finalFrame: CGRect) -> CGRect {
