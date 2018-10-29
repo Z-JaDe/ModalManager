@@ -47,6 +47,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             centerContentView = result
         }else {
             centerContentView = UIView()
+            _centerContentView = centerContentView
         }
         self.view.addSubview(centerContentView)
         return centerContentView
