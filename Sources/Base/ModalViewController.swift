@@ -115,12 +115,15 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             cancel()
         }
     }
+
+    public var didCancel:(() -> Void)?
     open func cancel(_ completion: (() -> Void)? = nil) {
         if let container = self.parent as? ModalContainerProtocol {
             container.hide(self, completion)
         } else {
             self.dismiss(animated: true, completion: completion)
         }
+        self.didCancel?()
     }
     // MARK: -
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
