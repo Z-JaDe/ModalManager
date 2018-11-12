@@ -112,7 +112,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             return
         }
         if (self.view.backgroundColor?.alpha ?? 0) <= 0.03 {
-            cancel()
+            dimmingViewTapped()
         }
     }
 
