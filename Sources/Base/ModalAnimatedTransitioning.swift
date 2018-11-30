@@ -22,7 +22,7 @@ open class ModalAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransit
         return animateDuration(transitionContext?.isAnimated ?? false)
     }
     public final func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let fromVC:UIViewController = transitionContext.viewController(forKey: .from)!
+        let _:UIViewController = transitionContext.viewController(forKey: .from)!
         let toVC:UIViewController = transitionContext.viewController(forKey: .to)!
         let fromView:UIView? = transitionContext.view(forKey: .from)
         let toView:UIView? = transitionContext.view(forKey: .to)
