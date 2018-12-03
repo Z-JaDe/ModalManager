@@ -39,24 +39,6 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         self.transitioningDelegate = tempPresentationController
     }
 
-
-    /// ZJaDe: 调用时会 自动添加到self.view上面, 当内容尺寸不确定时可以使用这个，内容尺寸确定的话 直接使用self.view
-    private var _centerContentView:UIView?
-    public var centerContentView: UIView {
-        let centerContentView:UIView
-        if let result = self._centerContentView {
-            centerContentView = result
-        }else {
-            centerContentView = UIView()
-            _centerContentView = centerContentView
-        }
-        if centerContentView.superview != self.view {
-            self.view.addSubview(centerContentView)
-            centerContentViewLayout()
-        }
-        return centerContentView
-    }
-
     open override func viewDidLoad() {
         super.viewDidLoad()
         addChildView()
@@ -64,8 +46,6 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         view.setNeedsLayout()
         updatePreferredContentSize(traitCollection: self.traitCollection)
         reloadData()
-
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped(_:))))
     }
 
     public var isShowing: Bool {
@@ -86,36 +66,12 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     open func configLayout() {
 
     }
-    func centerContentViewLayout() {
-        guard let centerContentView = self._centerContentView else {
-            return
-        }
-        centerContentView.translatesAutoresizingMaskIntoConstraints = false
-        var constraintArr:[NSLayoutConstraint] = []
-        constraintArr.append(centerContentView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor))
-        constraintArr.append(centerContentView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor))
-        constraintArr.append(centerContentView.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor))
-        constraintArr.append(centerContentView.leftAnchor.constraint(greaterThanOrEqualTo: self.view.leftAnchor))
-        NSLayoutConstraint.activate(constraintArr)
-    }
 
     /// ZJaDe: 点击 dimmingView
     @objc open func dimmingViewTapped() {
         cancel()
     }
-    @objc open func viewTapped(_ sender: UITapGestureRecognizer) {
-        let point = sender.location(in: self.view)
-        guard let view = self.view.hitTest(point, with: nil) else {
-            return
-        }
-        guard self.view == view else {
-            return
-        }
-        if (self.view.backgroundColor?.alpha ?? 0) <= 0.03 {
-            dimmingViewTapped()
-        }
-    }
-
+    
     public var didCancel:(() -> Void)?
     open func cancel(_ completion: (() -> Void)? = nil) {
         if let container = self.parent as? ModalContainerProtocol {
