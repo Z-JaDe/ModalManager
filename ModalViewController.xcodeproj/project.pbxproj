@@ -16,6 +16,7 @@
 		C915BBEE2182AB6B00AB3B35 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBED2182AB6B00AB3B35 /* PresentationController.swift */; };
 		C915BBF62182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */; };
 		C915BBFA2182F6DD00AB3B35 /* ModalManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */; };
+		C918DEDF21B519AD000F2AAC /* ModalViewController+ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C918DEDE21B519AD000F2AAC /* ModalViewController+ContentView.swift */; };
 		C972593E2183002A003A6342 /* ModalContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972593D2183002A003A6342 /* ModalContainerProtocol.swift */; };
 		C9DB104121844E7D00BE59C1 /* ModalPresentationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB104021844E7D00BE59C1 /* ModalPresentationDelegate.swift */; };
 		C9DB1043218450A800BE59C1 /* ModalAnimatedTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB1042218450A800BE59C1 /* ModalAnimatedTransitioningDelegate.swift */; };
@@ -33,6 +34,7 @@
 		C915BBED2182AB6B00AB3B35 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalAnimatedTransitioning.swift; sourceTree = "<group>"; };
 		C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ModalManager.podspec; sourceTree = "<group>"; };
+		C918DEDE21B519AD000F2AAC /* ModalViewController+ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModalViewController+ContentView.swift"; sourceTree = "<group>"; };
 		C972593D2183002A003A6342 /* ModalContainerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalContainerProtocol.swift; sourceTree = "<group>"; };
 		C9DB104021844E7D00BE59C1 /* ModalPresentationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationDelegate.swift; sourceTree = "<group>"; };
 		C9DB1042218450A800BE59C1 /* ModalAnimatedTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalAnimatedTransitioningDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			children = (
 				C915BBF52182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift */,
 				C915BBEB2182AB2200AB3B35 /* ModalViewController.swift */,
+				C918DEDE21B519AD000F2AAC /* ModalViewController+ContentView.swift */,
 				C915BBED2182AB6B00AB3B35 /* PresentationController.swift */,
 			);
 			path = Base;
@@ -173,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C918DEDF21B519AD000F2AAC /* ModalViewController+ContentView.swift in Sources */,
 				C915BBEE2182AB6B00AB3B35 /* PresentationController.swift in Sources */,
 				C915BBDB2182AA8300AB3B35 /* ViewController.swift in Sources */,
 				C915BBF62182CEAF00AB3B35 /* ModalAnimatedTransitioning.swift in Sources */,
