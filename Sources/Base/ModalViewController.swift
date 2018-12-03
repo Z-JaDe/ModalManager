@@ -41,6 +41,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
 
     open override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         addChildView()
         configLayout()
         view.setNeedsLayout()
