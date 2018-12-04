@@ -9,7 +9,10 @@
 import UIKit
 
 open class ModalViewController: UIViewController, ModalPresentationDelegate, ModalAnimatedTransitioningDeledate {
-
+    open override func loadView() {
+        super.loadView()
+        self.view = ModalRootView(frame: self.view.frame)
+    }
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         configInit()
@@ -82,6 +85,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         }
         self.didCancel?()
     }
+    // MARK: -
     // MARK: -
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)

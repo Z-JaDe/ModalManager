@@ -10,7 +10,15 @@ import UIKit
 
 open class PresentationController: UIPresentationController {
     // MARK: -
-    public class PresentationWrappingView: UIView { }
+    public class PresentationWrappingView: UIView {
+        public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            let view = super.hitTest(point, with: event)
+            if view == self {
+                return nil
+            }
+            return view
+        }
+    }
     public class DimmingView: UIView { }
     public let modalVC: ModalViewController
     var modalDelegate: ModalPresentationDelegate? {
@@ -166,7 +174,7 @@ open class PresentationController: UIPresentationController {
         self.presentationWrappingView?.frame = self.frameOfPresentedViewInContainerView
     }
 
-    var _containerView: UIView {
+    private var _containerView: UIView {
         let view:UIView
         if let result = self.containerView {
             view = result
