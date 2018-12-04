@@ -35,7 +35,7 @@ extension ModalContainerProtocol where Self: UIViewController {
     }
     /// ZJaDe: 具体实现 不能直接调用
     public func _hide(_ viewCon: ModalViewController, _ completion: AnimateCompletionType?) {
-        func remove(_ view:UIView, _ viewCon: ModalViewController) {
+        func remove(_ view: UIView, _ viewCon: ModalViewController) {
             view.removeFromSuperview()
             viewCon.willMove(toParent: nil)
             viewCon.removeFromParent()

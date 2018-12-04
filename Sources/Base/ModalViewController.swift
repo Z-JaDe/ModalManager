@@ -75,7 +75,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     @objc open func dimmingViewTapped() {
         cancel()
     }
-    
+
     public var didCancel:(() -> Void)?
     open func cancel(_ completion: (() -> Void)? = nil) {
         if let container = self.parent as? ModalContainerProtocol {

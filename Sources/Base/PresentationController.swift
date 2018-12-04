@@ -24,7 +24,7 @@ open class PresentationController: UIPresentationController {
     var modalDelegate: ModalPresentationDelegate? {
         return self.modalVC.presentationDelegate
     }
-    private var modalContainer:UIViewController?
+    private var modalContainer: UIViewController?
     public required init(_ modalVC: ModalViewController, modalContainer: UIViewController) {
         self.modalVC = modalVC
         super.init(presentedViewController: modalVC, presenting: nil)
@@ -49,7 +49,7 @@ open class PresentationController: UIPresentationController {
         return self.presentationWrappingView
     }
     // MARK: -
-    var key:NSKeyValueObservation?
+    var key: NSKeyValueObservation?
     public final override func presentationTransitionWillBegin() {
         self.modalDelegate?.presentationTransitionWillBegin()
         guard let presentedView = super.presentedView else { return }
@@ -105,15 +105,15 @@ open class PresentationController: UIPresentationController {
         dimmingView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         return dimmingView
     }
-    
+
     /// ZJaDe: dimmingView动画
-    open func showDimmingViewAnimate(_ dimmingView:DimmingView) {
+    open func showDimmingViewAnimate(_ dimmingView: DimmingView) {
         dimmingView.alpha = 0
         animate {
             dimmingView.alpha = 0.5
         }
     }
-    open func hideDimmingViewAnimate(_ dimmingView:DimmingView) {
+    open func hideDimmingViewAnimate(_ dimmingView: DimmingView) {
         animate {
             dimmingView.alpha = 0
         }
@@ -125,10 +125,10 @@ open class PresentationController: UIPresentationController {
     /// ZJaDe: animate
     open func animate(_ closure: @escaping () -> Void) {
         if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
-            transitionCoordinator.animate(alongsideTransition: { (context) in
+            transitionCoordinator.animate(alongsideTransition: { (_) in
                 closure()
             }, completion: nil)
-        }else {
+        } else {
             UIView.animate(withDuration: 0.35) {
                 closure()
             }
@@ -143,7 +143,7 @@ open class PresentationController: UIPresentationController {
         }
         if let containerView = self.containerView {
             containerView.setNeedsLayout()
-        }else {
+        } else {
             containerViewWillLayoutSubviews()
             _containerView.setNeedsLayout()
             containerViewDidLayoutSubviews()
@@ -152,11 +152,11 @@ open class PresentationController: UIPresentationController {
     open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
         if container === self.modalVC {
             return self.modalVC.preferredContentSize
-        }else {
+        } else {
             return super.size(forChildContentContainer: container, withParentContainerSize: parentSize)
         }
     }
-    
+
     public final override var frameOfPresentedViewInContainerView: CGRect {
         let presentedViewContentSize = self.size(forChildContentContainer: self.modalVC, withParentContainerSize: containerViewBounds.size)
         guard let result = self.modalDelegate?.presentedViewFrame(containerViewBounds, presentedViewContentSize) else {
@@ -175,12 +175,12 @@ open class PresentationController: UIPresentationController {
     }
 
     private var _containerView: UIView {
-        let view:UIView
+        let view: UIView
         if let result = self.containerView {
             view = result
         } else if let modalContainer = self.modalContainer {
             view = modalContainer.view
-        }else {
+        } else {
             view = self.presentingViewController.view
         }
         return view
@@ -188,5 +188,5 @@ open class PresentationController: UIPresentationController {
     open var containerViewBounds: CGRect {
         return _containerView.bounds
     }
-    
+
 }
