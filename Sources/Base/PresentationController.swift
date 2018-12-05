@@ -49,7 +49,6 @@ open class PresentationController: UIPresentationController {
         return self.presentationWrappingView
     }
     // MARK: -
-    var key: NSKeyValueObservation?
     public final override func presentationTransitionWillBegin() {
         self.modalDelegate?.presentationTransitionWillBegin()
         guard let presentedView = super.presentedView else { return }
