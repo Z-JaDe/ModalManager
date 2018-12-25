@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol ModalPresentationDelegate: class {
-    func config(presentationWrappingView wrappingView: PresentationController.PresentationWrappingView)
+    func config(wrappingView: PresentationController.WrappingView)
     func config(dimmingView: PresentationController.DimmingView)
     /// ZJaDe: 计算 presentedView frame
     func presentedViewFrame(_ containerViewBounds: CGRect, _ presentedViewContentSize: CGSize) -> CGRect

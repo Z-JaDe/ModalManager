@@ -58,7 +58,7 @@ class ModalRootView: UIView {
 }
 
 extension ModalViewController {
-    /// ZJaDe: 调用时会 自动添加到self.view上面, 当内容尺寸不确定时可以使用这个，内容尺寸确定的话 直接使用self.view;
+    /// ZJaDe: 调用时会 自动添加到self.view上面, 当内容尺寸不确定时可以使用这个，内容尺寸确定的话 直接使用self.view同时可以重写contentViewHeight;
     public var centerContentView: UIView {
         // swiftlint:disable force_cast
         return (self.view as! ModalRootView).centerContentView

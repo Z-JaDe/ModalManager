@@ -10,7 +10,7 @@ import UIKit
 
 open class PresentationController: UIPresentationController {
     // MARK: -
-    public class PresentationWrappingView: UIView {
+    public class WrappingView: UIView {
         public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
             let view = super.hitTest(point, with: event)
             if view == self {
@@ -28,34 +28,32 @@ open class PresentationController: UIPresentationController {
     public required init(_ modalVC: ModalViewController, modalContainer: UIViewController) {
         self.modalVC = modalVC
         super.init(presentedViewController: modalVC, presenting: nil)
-        modalVC.modalPresentationStyle = .custom
         self.modalContainer = modalContainer
         configInit()
     }
     public required init(_ modalVC: ModalViewController, presenting: UIViewController?) {
         self.modalVC = modalVC
         super.init(presentedViewController: modalVC, presenting: presenting)
-        modalVC.modalPresentationStyle = .custom
         configInit()
     }
 
     open func configInit() {
 
     }
-    private var presentationWrappingView: PresentationWrappingView?
+    private var wrappingView: WrappingView?
     private var dimmingView: DimmingView?
 
     open override var presentedView: UIView? {
-        return self.presentationWrappingView
+        return self.wrappingView
     }
     // MARK: -
     public final override func presentationTransitionWillBegin() {
         self.modalDelegate?.presentationTransitionWillBegin()
         guard let presentedView = super.presentedView else { return }
         /// ZJaDe:
-        let wrappingView = createPresentationWrappingView()
-        self.presentationWrappingView = wrappingView
-        self.modalDelegate?.config(presentationWrappingView: wrappingView)
+        let wrappingView = createWrappingView()
+        self.wrappingView = wrappingView
+        self.modalDelegate?.config(wrappingView: wrappingView)
         wrappingView.frame = self.frameOfPresentedViewInContainerView
         /// ZJaDe:
         presentedView.frame = wrappingView.bounds
@@ -71,7 +69,7 @@ open class PresentationController: UIPresentationController {
     }
     open override func presentationTransitionDidEnd(_ completed: Bool) {
         if completed == false {
-            self.presentationWrappingView = nil
+            self.wrappingView = nil
             self.dimmingView?.removeFromSuperview()
             self.dimmingView = nil
         }
@@ -84,7 +82,7 @@ open class PresentationController: UIPresentationController {
     }
     open override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed == true {
-            self.presentationWrappingView = nil
+            self.wrappingView = nil
             self.dimmingView?.removeFromSuperview()
             self.dimmingView = nil
         }
@@ -92,8 +90,8 @@ open class PresentationController: UIPresentationController {
     }
     // MARK: - 自定义方法 可重写
     /// ZJaDe: 创建presentedView的 阴影层视图
-    open func createPresentationWrappingView() -> PresentationWrappingView {
-        let view = PresentationWrappingView()
+    open func createWrappingView() -> WrappingView {
+        let view = WrappingView()
         return view
     }
     /// ZJaDe: 创建背景层视图
@@ -118,7 +116,7 @@ open class PresentationController: UIPresentationController {
         }
     }
     /// ZJaDe: add presentedView
-    open func add(presentedView: UIView, in wrappingView: PresentationWrappingView) {
+    open func add(presentedView: UIView, in wrappingView: WrappingView) {
         wrappingView.addSubview(presentedView)
     }
     /// ZJaDe: animate
@@ -170,7 +168,7 @@ open class PresentationController: UIPresentationController {
     /// ZJaDe:
     open func updateViewsFrame() {
         self.dimmingView?.frame = containerViewBounds
-        self.presentationWrappingView?.frame = self.frameOfPresentedViewInContainerView
+        self.wrappingView?.frame = self.frameOfPresentedViewInContainerView
     }
 
     private var _containerView: UIView {

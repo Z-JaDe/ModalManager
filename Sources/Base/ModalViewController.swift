@@ -22,26 +22,22 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     }
 
     // MARK: -
-    /// ZJaDe: model时 因为不是present(:::) 所以presentingViewController为nil 所以需要手动记录下
+    /// ZJaDe: show时 因为不是present(:::) 所以presentingViewController为nil 所以需要手动记录下
     private weak var modalPresenting: UIViewController?
 
     public weak var presentationDelegate: ModalPresentationDelegate?
     public weak var animatedTransitioningDelegate: ModalAnimatedTransitioningDeledate?
 
-    public var tempPresentationController: PresentationController?
+    internal lazy var tempPresentationController: PresentationController? = createPresentationCon(presenting: nil)
     open func configInit() {
         self.presentationDelegate = self
         self.animatedTransitioningDelegate = self
         /** ZJaDe:
-            1. present之前需要随便初始化 一个 PresentationController 对象 要不然后面 presentationCon.presentingViewController 将取不到值，导致判断出错
-            就是这么变态，手动调用load() initialize()也不行
-         2. 又因为PresentationController初始化后会强引用presentedViewController，为了避免循环引用，还要保证PresentationController不被初始化多次，present之前先持有 PresentationController 对象 dismissed后释放
+            因为PresentationController初始化后会强引用presentedViewController，为了避免循环引用，还要保证PresentationController不被初始化多次，present之前先持有 PresentationController 对象 dismissed后释放
          */
-
-        tempPresentationController = createPresentationCon(presenting: nil)
-        self.transitioningDelegate = tempPresentationController
+        self.modalPresentationStyle = .custom
+        self.transitioningDelegate = self
     }
-
     open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
@@ -55,6 +51,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     public var isShowing: Bool {
         return self.getPresenting != nil
     }
+    // MARK: -
     public var getPresenting: UIViewController? {
         return self.modalPresenting ?? self.presentingViewController
     }
@@ -85,8 +82,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         }
         self.didCancel?()
     }
-    // MARK: -
-    // MARK: -
+
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updatePreferredContentSize(traitCollection: newCollection)
@@ -110,7 +106,6 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     open func createAnimatedTransitioning(isPresenting: Bool) -> ModalAnimatedTransitioning {
         return ModalAnimatedTransitioning(isPresenting, self.animatedTransitioningDelegate)
     }
-
     // MARK: - ModalPresentationDelegate
     public enum AnimateOption {
         case topOutToCenter, bottomOutToCenter, leftOutToCenter, rightOutToCenter
@@ -120,7 +115,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     open var animateOption: AnimateOption {
         return .bottomOutToCenter
     }
-    open func config(presentationWrappingView wrappingView: PresentationController.PresentationWrappingView) {
+    open func config(wrappingView: PresentationController.WrappingView) {
         switch self.animateOption {
         case .topOutIn:
             wrappingView.layer.shadowOffset = CGSize(width: 0, height: 6)
@@ -201,16 +196,19 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     }
 }
 
-extension PresentationController: UIViewControllerTransitioningDelegate {
+extension ModalViewController: UIViewControllerTransitioningDelegate {
+    public func updateViewsFrame() {
+        self.tempPresentationController?.updateViewsFrame()
+    }
     public final func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        assert(self.modalVC == presented, "presentedViewController错误")
-        return self
+        assert(self == presented, "presentedViewController错误")
+        return self.tempPresentationController
     }
     public final func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return modalVC.createAnimatedTransitioning(isPresenting: true)
+        return self.createAnimatedTransitioning(isPresenting: true)
     }
     public final func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return modalVC.createAnimatedTransitioning(isPresenting: false)
+        return self.createAnimatedTransitioning(isPresenting: false)
     }
 }
 //extension UIColor {
