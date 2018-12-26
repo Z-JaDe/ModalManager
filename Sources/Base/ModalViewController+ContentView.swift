@@ -26,34 +26,21 @@ class ModalRootView: UIView {
         return centerContentView
     }
     private func centerContentViewLayout() {
-        guard let centerContentView = _centerContentView else {
-            return
-        }
+        guard let centerContentView = _centerContentView else { return }
         centerContentView.translatesAutoresizingMaskIntoConstraints = false
-        var constraintArr: [NSLayoutConstraint] = []
-        constraintArr.append(centerContentView.centerXAnchor.constraint(equalTo: self.centerXAnchor))
-        constraintArr.append(centerContentView.centerYAnchor.constraint(equalTo: self.centerYAnchor))
-        constraintArr.append(centerContentView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor))
-        constraintArr.append(centerContentView.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor))
-        NSLayoutConstraint.activate(constraintArr)
+        NSLayoutConstraint.activate([
+            centerContentView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            centerContentView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            centerContentView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor),
+            centerContentView.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor)
+            ])
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let result = super.hitTest(point, with: event)
-        guard let view = result, _centerContentView != nil else {
-            return result
-        }
-        if view == self {
-            return nil
-        }
+        guard let view = result, _centerContentView != nil else { return result }
+        if view == self { return nil }
         return result
-//        if view == _centerContentView {
-//            return view
-//        }
-//        if view.isSubView(centerContentView) {
-//            return view
-//        }
-//        return nil
     }
 }
 
@@ -64,16 +51,3 @@ extension ModalViewController {
         return (self.view as! ModalRootView).centerContentView
     }
 }
-
-//extension UIView {
-//    func isSubView(_ view: UIView) -> Bool {
-//        guard let superview = self.superview else {
-//            return false
-//        }
-//        if superview == view {
-//            return true
-//        } else {
-//            return superview.isSubView(view)
-//        }
-//    }
-//}
