@@ -74,11 +74,11 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     }
 
     public var didCancel:(() -> Void)?
-    open func cancel(completion: (() -> Void)? = nil) {
+    open func cancel(animated:Bool = true, completion: (() -> Void)? = nil) {
         if let container = self.parent as? ModalContainerProtocol {
-            container.hide(self, completion)
+            container.hide(self, animated: animated, completion)
         } else {
-            self.dismiss(animated: true, completion: completion)
+            self.dismiss(animated: animated, completion: completion)
         }
         self.didCancel?()
     }
