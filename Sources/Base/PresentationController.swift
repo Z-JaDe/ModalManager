@@ -24,7 +24,7 @@ open class PresentationController: UIPresentationController {
     var modalDelegate: ModalPresentationDelegate? {
         return self.modalVC.presentationDelegate
     }
-    private var modalContainer: UIViewController?
+    private weak var modalContainer: UIViewController?
     public required init(_ modalVC: ModalViewController, modalContainer: UIViewController) {
         self.modalVC = modalVC
         super.init(presentedViewController: modalVC, presenting: nil)
