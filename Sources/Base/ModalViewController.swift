@@ -28,7 +28,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     public weak var presentationDelegate: ModalPresentationDelegate?
     public weak var animatedTransitioningDelegate: ModalAnimatedTransitioningDeledate?
 
-    internal lazy var tempPresentationController: PresentationController? = createPresentationCon(presenting: nil)
+    internal var tempPresentationController: PresentationController?
     open func configInit() {
         self.presentationDelegate = self
         self.animatedTransitioningDelegate = self
@@ -202,6 +202,9 @@ extension ModalViewController: UIViewControllerTransitioningDelegate {
     }
     public final func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         assert(self == presented, "presentedViewController错误")
+        if self.tempPresentationController == nil {
+            self.tempPresentationController = createPresentationCon(presenting: presenting)
+        }
         return self.tempPresentationController
     }
     public final func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
