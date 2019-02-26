@@ -23,12 +23,12 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
 
     // MARK: -
     /// ZJaDe: show时 因为不是present(:::) 所以presentingViewController为nil 所以需要手动记录下
-    private weak var modalPresenting: UIViewController?
+    private weak var modalContainer: UIViewController?
 
     public weak var presentationDelegate: ModalPresentationDelegate?
     public weak var animatedTransitioningDelegate: ModalAnimatedTransitioningDeledate?
-
-    internal var tempPresentationController: PresentationController?
+    /// ZJaDe: 显示的过程中需要临时存储下，防止多次创建
+    private var tempPresentationController: PresentationController?
     open func configInit() {
         self.presentationDelegate = self
         self.animatedTransitioningDelegate = self
@@ -53,7 +53,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
     }
     // MARK: -
     public var getPresenting: UIViewController? {
-        return self.modalPresenting ?? self.presentingViewController
+        return self.modalContainer ?? self.presentingViewController
     }
     /// ZJaDe: 重新加载
     open func reloadData() {
@@ -82,6 +82,20 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         }
         self.didCancel?()
     }
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if self.view.window == nil {
+            /** ZJaDe:
+             有时候是show出来的，生命周期结束时没有cancel，为了防止循环引用，这时需要cancel下；
+             但是有可能是self已经不在视图层次的原因，只cancel的话还是会导致self和presentationController循环引用，所以需要手动置为nil
+             */
+            cancel()
+            self.presentationController?.setValue(nil, forKey: "presentedViewController")
+        }
+    }
 
     open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
@@ -96,12 +110,13 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         return PresentationController.self
     }
     func createPresentationCon(presenting presentingViewController: UIViewController? = nil) -> PresentationController {
-        self.modalPresenting = presentingViewController
         return presentationControllerClass.init(self, presenting: presentingViewController)
     }
     func createPresentationCon(modalContainer: UIViewController) -> PresentationController {
-        self.modalPresenting = modalContainer
-        return presentationControllerClass.init(self, modalContainer: modalContainer)
+        self.modalContainer = modalContainer
+        let result = presentationControllerClass.init(self, modalContainer: modalContainer)
+        self.tempPresentationController = result
+        return result
     }
     open func createAnimatedTransitioning(isPresenting: Bool) -> ModalAnimatedTransitioning {
         return ModalAnimatedTransitioning(isPresenting, self.animatedTransitioningDelegate)
@@ -156,7 +171,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         result.origin = CGPoint(x: x, y: y)
         return result
     }
-    public enum State {
+    public enum State: Int {
         case 还未显示
         case 将要显示
         case 已经显示
@@ -201,7 +216,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
 
 extension ModalViewController: UIViewControllerTransitioningDelegate {
     public func updateViewsFrame() {
-        self.tempPresentationController?.updateViewsFrame()
+        (self.presentationController as? PresentationController)?.updateViewsFrame()
     }
     public final func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         assert(self == presented, "presentedViewController错误")

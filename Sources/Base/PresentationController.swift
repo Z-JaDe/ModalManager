@@ -20,9 +20,9 @@ open class PresentationController: UIPresentationController {
         }
     }
     public class DimmingView: UIView { }
-    public let modalVC: ModalViewController
+    public weak var modalVC: ModalViewController?
     var modalDelegate: ModalPresentationDelegate? {
-        return self.modalVC.presentationDelegate
+        return self.modalVC?.presentationDelegate
     }
     private weak var modalContainer: UIViewController?
     public required init(_ modalVC: ModalViewController, modalContainer: UIViewController) {
@@ -63,7 +63,7 @@ open class PresentationController: UIPresentationController {
         self.dimmingView = dimmingView
         self.modalDelegate?.config(dimmingView: dimmingView)
         dimmingView.addGestureRecognizer(UITapGestureRecognizer(target: modalVC, action: #selector(ModalViewController.dimmingViewTapped)))
-        self._containerView.addSubview(dimmingView)
+        self._containerView?.addSubview(dimmingView)
         /// ZJaDe:
         showDimmingViewAnimate(dimmingView)
     }
@@ -142,20 +142,23 @@ open class PresentationController: UIPresentationController {
             containerView.setNeedsLayout()
         } else {
             containerViewWillLayoutSubviews()
-            _containerView.setNeedsLayout()
+            _containerView?.setNeedsLayout()
             containerViewDidLayoutSubviews()
         }
     }
     open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
         if container === self.modalVC {
-            return self.modalVC.preferredContentSize
+            return container.preferredContentSize
         } else {
             return super.size(forChildContentContainer: container, withParentContainerSize: parentSize)
         }
     }
 
     public final override var frameOfPresentedViewInContainerView: CGRect {
-        let presentedViewContentSize = self.size(forChildContentContainer: self.modalVC, withParentContainerSize: containerViewBounds.size)
+        guard let modalVC = self.modalVC else {
+            return super.frameOfPresentedViewInContainerView
+        }
+        let presentedViewContentSize = self.size(forChildContentContainer: modalVC, withParentContainerSize: containerViewBounds.size)
         guard let result = self.modalDelegate?.presentedViewFrame(containerViewBounds, presentedViewContentSize) else {
             return super.frameOfPresentedViewInContainerView
         }
@@ -171,19 +174,19 @@ open class PresentationController: UIPresentationController {
         self.wrappingView?.frame = self.frameOfPresentedViewInContainerView
     }
 
-    private var _containerView: UIView {
-        let view: UIView
+    private var _containerView: UIView? {
+        let view: UIView?
         if let result = self.containerView {
             view = result
         } else if let modalContainer = self.modalContainer {
             view = modalContainer.view
         } else {
-            view = self.presentingViewController.view
+            view = nil
         }
         return view
     }
     open var containerViewBounds: CGRect {
-        return _containerView.bounds
+        return _containerView?.bounds ?? CGRect.zero
     }
 
 }

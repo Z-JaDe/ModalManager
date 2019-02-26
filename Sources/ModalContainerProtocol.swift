@@ -11,6 +11,7 @@ import UIKit
 public protocol ModalContainerProtocol: class {
     typealias AnimateCompletionType = () -> Void
     func show(_ viewCon: ModalViewController, animated: Bool)
+    /// ZJaDe: 如果是协调器方式show出来的 为了保证断开循环引用不要使用hide 使用modalVC.cancel()
     func hide(_ viewCon: ModalViewController, animated: Bool, _ completion: AnimateCompletionType?)
 }
 extension ModalContainerProtocol where Self: UIViewController {
@@ -18,7 +19,6 @@ extension ModalContainerProtocol where Self: UIViewController {
     public func _show(_ viewCon: ModalViewController, animated: Bool) {
         guard viewCon.parent == nil else { return }
         let presentationCon = viewCon.createPresentationCon(modalContainer: self)
-        viewCon.tempPresentationController = presentationCon
         let animatedTransitioning = viewCon.createAnimatedTransitioning(isPresenting: true)
         let containerView: UIView = self.view
         let animateDuration = animatedTransitioning.animateDuration(animated)
@@ -35,14 +35,8 @@ extension ModalContainerProtocol where Self: UIViewController {
     }
     /// ZJaDe: 具体实现 不能直接调用
     public func _hide(_ viewCon: ModalViewController, animated: Bool, _ completion: AnimateCompletionType?) {
-        func remove(_ view: UIView, _ viewCon: ModalViewController) {
-            view.removeFromSuperview()
-            viewCon.willMove(toParent: nil)
-            viewCon.removeFromParent()
-            completion?()
-        }
         guard viewCon.parent is ModalContainerProtocol else { return }
-        guard let presentationCon = viewCon.tempPresentationController else { return }
+        guard let presentationCon = viewCon.presentationController else { return }
         let animatedTransitioning = viewCon.createAnimatedTransitioning(isPresenting: false)
 
         let animateDuration = animatedTransitioning.animateDuration(animated)
@@ -51,7 +45,10 @@ extension ModalContainerProtocol where Self: UIViewController {
         let fromView: UIView = presentationCon.presentedView!
 
         animatedTransitioning.hide(fromView: fromView, initialFrame: fromView.frame, duration: animateDuration, completion: { (_) in
-            remove(fromView, viewCon)
+            fromView.removeFromSuperview()
+            viewCon.willMove(toParent: nil)
+            viewCon.removeFromParent()
+            completion?()
         })
         presentationCon.dismissalTransitionDidEnd(true)
     }
