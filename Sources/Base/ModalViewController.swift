@@ -111,6 +111,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
         case topOutToCenter, bottomOutToCenter, leftOutToCenter, rightOutToCenter
         case topOutIn, bottomOutIn, leftOutIn, rightOutIn
         case centerInOut
+        case none
     }
     open var animateOption: AnimateOption {
         return .bottomOutToCenter
@@ -125,7 +126,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             wrappingView.layer.shadowOffset = CGSize(width: 6, height: 0)
         case .rightOutIn:
             wrappingView.layer.shadowOffset = CGSize(width: -6, height: 0)
-        case .centerInOut, .topOutToCenter, .bottomOutToCenter, .leftOutToCenter, .rightOutToCenter:
+        case .centerInOut, .topOutToCenter, .bottomOutToCenter, .leftOutToCenter, .rightOutToCenter, .none:
             wrappingView.layer.shadowOffset = CGSize(width: 0, height: 0)
         }
         wrappingView.layer.shadowOpacity = 0.44
@@ -149,7 +150,7 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             x = 0
         case .rightOutIn:
             x = containerViewBounds.maxX - result.width
-        case .centerInOut, .topOutToCenter, .bottomOutToCenter, .leftOutToCenter, .rightOutToCenter:
+        case .none, .centerInOut, .topOutToCenter, .bottomOutToCenter, .leftOutToCenter, .rightOutToCenter:
             break
         }
         result.origin = CGPoint(x: x, y: y)
@@ -189,6 +190,8 @@ open class ModalViewController: UIViewController, ModalPresentationDelegate, Mod
             return finalFrame.offsetBy(dx: finalFrame.width, dy: 0)
         case .centerInOut:
             return CGRect(origin: CGPoint(x: finalFrame.midX, y: finalFrame.midY), size: CGSize.zero)
+        case .none:
+            return finalFrame
         }
     }
     open func calculateFromViewFinalFrame(initialFrame: CGRect) -> CGRect {
