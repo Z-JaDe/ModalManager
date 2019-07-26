@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180A052C22EA957E00AC7D19 /* ModalViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180A052B22EA957E00AC7D19 /* ModalViewControllerTests.swift */; };
 		C915BBD92182AA8300AB3B35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBD82182AA8300AB3B35 /* AppDelegate.swift */; };
 		C915BBDB2182AA8300AB3B35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C915BBDA2182AA8300AB3B35 /* ViewController.swift */; };
 		C915BBDE2182AA8300AB3B35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C915BBDC2182AA8300AB3B35 /* Main.storyboard */; };
@@ -22,7 +23,20 @@
 		C9DB1043218450A800BE59C1 /* ModalAnimatedTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB1042218450A800BE59C1 /* ModalAnimatedTransitioningDelegate.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		180A052E22EA957E00AC7D19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C915BBCD2182AA8300AB3B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C915BBD42182AA8300AB3B35;
+			remoteInfo = ModalViewController;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		180A052922EA957E00AC7D19 /* ModalViewControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ModalViewControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		180A052B22EA957E00AC7D19 /* ModalViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewControllerTests.swift; sourceTree = "<group>"; };
+		180A052D22EA957E00AC7D19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C915BBD52182AA8300AB3B35 /* ModalViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModalViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C915BBD82182AA8300AB3B35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C915BBDA2182AA8300AB3B35 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -41,6 +55,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		180A052622EA957E00AC7D19 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C915BBD22182AA8300AB3B35 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,12 +72,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		180A052A22EA957E00AC7D19 /* ModalViewControllerTests */ = {
+			isa = PBXGroup;
+			children = (
+				180A052B22EA957E00AC7D19 /* ModalViewControllerTests.swift */,
+				180A052D22EA957E00AC7D19 /* Info.plist */,
+			);
+			path = ModalViewControllerTests;
+			sourceTree = "<group>";
+		};
 		C915BBCC2182AA8300AB3B35 = {
 			isa = PBXGroup;
 			children = (
 				C915BBF92182F6DD00AB3B35 /* ModalManager.podspec */,
 				C915BBEA2182AACE00AB3B35 /* Sources */,
 				C915BBD72182AA8300AB3B35 /* ModalViewController */,
+				180A052A22EA957E00AC7D19 /* ModalViewControllerTests */,
 				C915BBD62182AA8300AB3B35 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				C915BBD52182AA8300AB3B35 /* ModalViewController.app */,
+				180A052922EA957E00AC7D19 /* ModalViewControllerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +139,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		180A052822EA957E00AC7D19 /* ModalViewControllerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 180A053222EA957E00AC7D19 /* Build configuration list for PBXNativeTarget "ModalViewControllerTests" */;
+			buildPhases = (
+				180A052522EA957E00AC7D19 /* Sources */,
+				180A052622EA957E00AC7D19 /* Frameworks */,
+				180A052722EA957E00AC7D19 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				180A052F22EA957E00AC7D19 /* PBXTargetDependency */,
+			);
+			name = ModalViewControllerTests;
+			productName = ModalViewControllerTests;
+			productReference = 180A052922EA957E00AC7D19 /* ModalViewControllerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C915BBD42182AA8300AB3B35 /* ModalViewController */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C915BBE72182AA8400AB3B35 /* Build configuration list for PBXNativeTarget "ModalViewController" */;
@@ -130,10 +180,14 @@
 		C915BBCD2182AA8300AB3B35 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1000;
+				LastSwiftUpdateCheck = 1030;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = zjade;
 				TargetAttributes = {
+					180A052822EA957E00AC7D19 = {
+						CreatedOnToolsVersion = 10.3;
+						TestTargetID = C915BBD42182AA8300AB3B35;
+					};
 					C915BBD42182AA8300AB3B35 = {
 						CreatedOnToolsVersion = 10.0;
 					};
@@ -153,11 +207,19 @@
 			projectRoot = "";
 			targets = (
 				C915BBD42182AA8300AB3B35 /* ModalViewController */,
+				180A052822EA957E00AC7D19 /* ModalViewControllerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		180A052722EA957E00AC7D19 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C915BBD32182AA8300AB3B35 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -172,6 +234,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		180A052522EA957E00AC7D19 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				180A052C22EA957E00AC7D19 /* ModalViewControllerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C915BBD12182AA8300AB3B35 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -189,6 +259,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		180A052F22EA957E00AC7D19 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C915BBD42182AA8300AB3B35 /* ModalViewController */;
+			targetProxy = 180A052E22EA957E00AC7D19 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C915BBDC2182AA8300AB3B35 /* Main.storyboard */ = {
@@ -210,6 +288,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		180A053022EA957E00AC7D19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = ModalViewControllerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.zjade.ModalViewControllerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ModalViewController.app/ModalViewController";
+			};
+			name = Debug;
+		};
+		180A053122EA957E00AC7D19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = ModalViewControllerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.zjade.ModalViewControllerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ModalViewController.app/ModalViewController";
+			};
+			name = Release;
+		};
 		C915BBE52182AA8400AB3B35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -268,6 +386,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -322,6 +441,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -339,8 +459,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zjade.ModalViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -357,14 +477,23 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zjade.ModalViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		180A053222EA957E00AC7D19 /* Build configuration list for PBXNativeTarget "ModalViewControllerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				180A053022EA957E00AC7D19 /* Debug */,
+				180A053122EA957E00AC7D19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C915BBD02182AA8300AB3B35 /* Build configuration list for PBXProject "ModalViewController" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
