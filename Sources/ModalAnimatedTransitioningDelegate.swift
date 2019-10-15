@@ -2,7 +2,7 @@
 //  ModalAnimatedTransitioningDelegate.swift
 //  ModalViewController
 //
-//  Created by 郑军铎 on 2018/10/27.
+//  Created by ZJaDe on 2018/10/27.
 //  Copyright © 2018 zjade. All rights reserved.
 //
 

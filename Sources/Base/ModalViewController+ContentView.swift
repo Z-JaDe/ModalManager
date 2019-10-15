@@ -2,7 +2,7 @@
 //  ModalViewController+ContentView.swift
 //  ModalViewController
 //
-//  Created by 郑军铎 on 2018/12/3.
+//  Created by ZJaDe on 2018/12/3.
 //  Copyright © 2018 zjade. All rights reserved.
 //
 
