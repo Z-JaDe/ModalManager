@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol ModalContainerProtocol: class {
+public protocol ModalContainerProtocol: AnyObject {
     typealias AnimateCompletionType = () -> Void
     func show(_ viewCon: ModalViewController, animated: Bool)
     /// ZJaDe: 如果是协调器方式show出来的 为了保证断开循环引用不要使用hide 使用modalVC.cancel()
