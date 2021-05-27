@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol ModalPresentationDelegate: class {
+public protocol ModalPresentationDelegate: AnyObject {
     func config(wrappingView: PresentationController.WrappingView)
     func config(dimmingView: PresentationController.DimmingView)
     /// ZJaDe: 计算 presentedView frame
